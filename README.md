@@ -1,4 +1,4 @@
-# 🔐 Security Feature Mini Project (ASP.NET Core MVC)
+# Security Feature Mini Project (ASP.NET Core MVC)
 
 This project is a **Security Feature Mini Project** developed using **ASP.NET Core MVC** and **Entity Framework Core**, focusing on implementing **core web security concepts manually**, without relying on ASP.NET Identity.
 
@@ -6,7 +6,7 @@ The system demonstrates authentication, authorization, auditing, and administrat
 
 ---
 
-## 🚀 Features
+##  Features
 
 ###  Authentication & Authorization
 - Manual username/password authentication
