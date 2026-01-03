@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center align-items-center min-vh-75">
+    <div class="col-xl-4 col-lg-5 col-md-6">
+        <div class="card card-modern">
+            <div class="card-header card-header-gradient text-center py-4">
+                <div class="avatar-lg mx-auto mb-3">
+                    <div class="avatar-title bg-white rounded-circle" style="width: 60px; height: 60px;">
+                        <i class="bi bi-shield-lock fs-3 text-primary"></i>
+                    </div>
+                </div>
+                <h4 class="mb-1">Secure System Login</h4>
+                <p class="mb-0 opacity-75">Enter your credentials to continue</p>
+            </div>
+
+            <div class="card-body p-4 p-xl-5">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle me-3"></i>
+                        <div>@ViewBag.Error</div>
+                    </div>
+                }
+
+                <form method="post" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-end-0">
+                                <i class="bi bi-person text-muted"></i>
+                            </span>
+                            <input name="username" class="form-control border-start-0" placeholder="Enter username" required />
+                            <div class="invalid-feedback">
+                                Please enter your username.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-semibold">Password</label>
+                            <a href="#" class="text-decoration-none small text-muted">
+                                <i class="bi bi-key me-1"></i> Forgot password?
+                            </a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input name="password" type="password" class="form-control border-start-0" placeholder="Enter password" required />
+                            <button class="btn btn-outline-secondary border-start-0" type="button" id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <div class="invalid-feedback">
+                                Please enter your password.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label text-muted" for="rememberMe">
+                            Remember me on this device
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary btn-modern w-100 py-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Login to Dashboard
+                    </button>
+
+                   
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+
+        
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('input[name="password"]');
+
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+        });
+    });
+</script>

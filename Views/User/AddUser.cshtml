@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "Add User";
+}
+
+<div class="row justify-content-center fade-in">
+    <div class="col-xl-5 col-lg-6 col-md-8">
+        <div class="card card-modern">
+            <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 d-flex align-items-center">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Add New User
+                </h5>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="post" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-end-0">
+                                <i class="bi bi-person-badge text-muted"></i>
+                            </span>
+                            <input name="username" class="form-control border-start-0" placeholder="Enter unique username" required />
+                            <div class="invalid-feedback">
+                                Please provide a username.
+                            </div>
+                        </div>
+                        <small class="text-muted mt-1">Username must be 3-20 characters, letters and numbers only</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-end-0">
+                                <i class="bi bi-key text-muted"></i>
+                            </span>
+                            <input name="password" type="password" class="form-control border-start-0" placeholder="Enter strong password" required />
+                            <button class="btn btn-outline-secondary border-start-0" type="button" id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <div class="invalid-feedback">
+                                Please provide a password.
+                            </div>
+                        </div>
+                        <div class="password-strength mt-2">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted mt-1">Use at least 8 characters with uppercase, lowercase, and numbers</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-end-0">
+                                <i class="bi bi-key-fill text-muted"></i>
+                            </span>
+                            <input name="confirmPassword" type="password" class="form-control border-start-0" placeholder="Re-enter password" required />
+                            <div class="invalid-feedback">
+                                Passwords must match.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Role</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-end-0">
+                                <i class="bi bi-person-rolodex text-muted"></i>
+                            </span>
+                            <select name="roleId" class="form-select border-start-0" required>
+                                <option value="" selected disabled>Select a role</option>
+                                @foreach (var role in ViewBag.Roles)
+                                {
+                                    <option value="@role.Id">@role.Name</option>
+                                }
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a role.
+                            </div>
+                        </div>
+                        <small class="text-muted mt-1">Admins have full system access, Users have limited access</small>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="sendWelcomeEmail" name="sendWelcomeEmail">
+                        <label class="form-check-label text-muted" for="sendWelcomeEmail">
+                            Send welcome email with credentials
+                        </label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-modern py-3">
+                            <i class="bi bi-person-check me-2"></i>
+                            Create User Account
+                        </button>
+
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-clockwise me-2"></i>
+                            Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Form validation
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+
+        // Password strength checker
+        const passwordInput = document.querySelector('input[name="password"]');
+        const strengthBar = document.getElementById('passwordStrength');
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[a-z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+
+            strengthBar.style.width = strength + '%';
+
+            if (strength < 50) {
+                strengthBar.className = 'progress-bar bg-danger';
+            } else if (strength < 75) {
+                strengthBar.className = 'progress-bar bg-warning';
+            } else {
+                strengthBar.className = 'progress-bar bg-success';
+            }
+        });
+
+        // Password confirmation validation
+        const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+        confirmPassword.addEventListener('input', function() {
+            if (passwordInput.value !== this.value) {
+                this.setCustomValidity('Passwords do not match');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Toggle password visibility
+        const togglePassword = document.querySelector('#togglePassword');
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            confirmPassword.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+        });
+    });
+</script>
